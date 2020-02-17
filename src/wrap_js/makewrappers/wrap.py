@@ -22,6 +22,7 @@ HMAC_SHA512_LEN = 64
 PBKDF2_HMAC_SHA256_LEN = 32
 PBKDF2_HMAC_SHA512_LEN = 64
 WALLY_SCRIPTPUBKEY_P2WSH_LEN = 34
+WALLY_SCRIPTPUBKEY_OP_RETURN_MAX_LEN = 83
 BITCOIN_MESSAGE_FLAG_HASH = 1
 
 
@@ -65,10 +66,21 @@ FUNCS = [
     ('wally_addr_segwit_from_bytes', F([
         'const_bytes[bytes]', 'string[addr_family]', 'uint32_t[flags]', 'out_str_p'
     ])),
-
     ('wally_addr_segwit_to_bytes', F([
         'string[addr]', 'string[addr_family]', 'uint32_t[flags]', 'out_bytes_sized'
     ], out_size=str(WALLY_SCRIPTPUBKEY_P2WSH_LEN))),
+
+    ('wally_address_to_scriptpubkey', F([
+        'string[addr]', 'uint32_t[network]', 'out_bytes_sized'
+    ], out_size=str(WALLY_SCRIPTPUBKEY_OP_RETURN_MAX_LEN))),
+
+    ('wally_scriptpubkey_to_address', F([
+        'const_bytes[scriptpubkey]', 'uint32_t[network]', 'out_str_p'
+    ])),
+
+
+
+
 
     # AES:
     ('wally_aes', F([

@@ -2,7 +2,7 @@ const wally = require('../wally');
 const test = require('tape');
 
 test('Confidential Address', function(t) {
-    t.plan(3);
+    t.plan(4);
 
     // The (Liquid) address that is to be blinded
     addr = 'Q7qcjTLsYGoMA7TjUp97R6E6AM5VKqBik6';
@@ -21,6 +21,13 @@ test('Confidential Address', function(t) {
         t.equal(Buffer.from(ecpubkey).toString('hex'), pubkey_hex, 'Extract blinding key');
         wally.wally_confidential_addr_from_addr(addr, wally.WALLY_CA_PREFIX_LIQUID, ecpubkey).then((res) => {
             t.equal(res, addr_c, 'Addr to conf addr');
-        });   
+        });
     });
+
+    // Test we can extract addr from scriptpubkey and vice versa
+    wally.wally_address_to_scriptpubkey(addr, wally.WALLY_NETWORK_LIQUID).then((scriptpubkey) => {
+        wally.wally_scriptpubkey_to_address(scriptpubkey, wally.WALLY_NETWORK_LIQUID).then((address) => {
+            t.equal(address, addr, 'addr -> scriptpubkey -> addr')
+        })
+    })
 });
